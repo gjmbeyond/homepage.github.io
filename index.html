@@ -34,6 +34,24 @@
 
 <body>
 
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="app_modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title simple-text" id="modal_title"></h4>
+            </div>
+            <div class="modal-body">
+                <div id="container"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <!-- <button type="button" class="btn btn-primary">提交更改</button> -->
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
 
 <div id="home">
 <!-- Slider Starts -->
@@ -42,7 +60,7 @@
           <div class="caption">
             <div class="caption-wrapper">
               <div class="caption-info">              
-              <img src="images/profile.jpg" class="img-circle profile">
+              <!-- <img src="images/profile.jpg" class="img-circle profile"> -->
               <h1 class="animated bounceInUp">Freelace frontend and backend developers</h1>
               <p class="animated bounceInLeft">Lorem Ipsum is simply dummy text of the printing and typesetting industry. </p>
              <div class="animated bounceInDown"><a href="#works" class="btn btn-default explore">view My Works</a></div>
@@ -66,105 +84,27 @@
     <figure class="effect-oscar  wowload fadeInUp">
         <img src="images/portfolio/1.jpg" alt="img01"/>
         <figcaption>
-            <h2>Cappuchino</h2>
-            <p>Lily likes to play with crayons and pencils<br>
-            <a href="images/portfolio/1.jpg" title="1" data-gallery>View more</a></p>            
+            <h2>应用1</h2>
+            <p>1~6的随机数<br>
+            <a onclick="app1();" title="应用1">View more</a></p>            
         </figcaption>
     </figure>
-     <figure class="effect-oscar  wowload fadeInUp">
+    <figure class="effect-oscar  wowload fadeInUp">
         <img src="images/portfolio/2.jpg" alt="img01"/>
         <figcaption>
-            <h2>Latte</h2>
-            <p>Lily likes to play with crayons and pencils<br>
-            <a href="images/portfolio/2.jpg" title="1" data-gallery>View more</a></p>            
+            <h2>应用2</h2>
+            <p>未支持的！<br>
+            <a title="应用2">View more</a></p>            
         </figcaption>
     </figure>
-     <figure class="effect-oscar  wowload fadeInUp">
+    <figure class="effect-oscar  wowload fadeInUp">
         <img src="images/portfolio/3.jpg" alt="img01"/>
         <figcaption>
-            <h2>Ambience</h2>
+            <h2>应用3</h2>
             <p>Lily likes to play with crayons and pencils<br>
-            <a href="images/portfolio/3.jpg" title="1" data-gallery>View more</a></p>            
+            <a title="应用3">View more</a></p>            
         </figcaption>
     </figure>
-     <figure class="effect-oscar  wowload fadeInUp">
-        <img src="images/portfolio/4.jpg" alt="img01"/>
-        <figcaption>
-            <h2>Fruits</h2>
-            <p>Lily likes to play with crayons and pencils<br>
-            <a href="images/portfolio/4.jpg" title="1" data-gallery>View more</a></p>            
-        </figcaption>
-    </figure>
-     
-     <figure class="effect-oscar  wowload fadeInUp">
-        <img src="images/portfolio/5.jpg" alt="img01"/>
-        <figcaption>
-            <h2>Breakfast</h2>
-            <p>Lily likes to play with crayons and pencils<br>
-            <a href="images/portfolio/5.jpg" title="1" data-gallery>View more</a></p>            
-        </figcaption>
-    </figure>
-    <figure class="effect-oscar  wowload fadeInUp">
-        <img src="images/portfolio/6.jpg" alt="img01"/>
-        <figcaption>
-            <h2>Kitchen</h2>
-            <p>Lily likes to play with crayons and pencils<br>
-            <a href="images/portfolio/6.jpg" title="1" data-gallery>View more</a></p>            
-        </figcaption>
-    </figure>
-    <figure class="effect-oscar  wowload fadeInUp">
-        <img src="images/portfolio/1.jpg" alt="img01"/>
-        <figcaption>
-            <h2>Cappuchino</h2>
-            <p>Lily likes to play with crayons and pencils<br>
-            <a href="images/portfolio/1.jpg" title="1" data-gallery>View more</a></p>            
-        </figcaption>
-    </figure>
-     <figure class="effect-oscar  wowload fadeInUp">
-        <img src="images/portfolio/2.jpg" alt="img01"/>
-        <figcaption>
-            <h2>Latte</h2>
-            <p>Lily likes to play with crayons and pencils<br>
-            <a href="images/portfolio/2.jpg" title="1" data-gallery>View more</a></p>            
-        </figcaption>
-    </figure>
-     <figure class="effect-oscar  wowload fadeInUp">
-        <img src="images/portfolio/3.jpg" alt="img01"/>
-        <figcaption>
-            <h2>Ambience</h2>
-            <p>Lily likes to play with crayons and pencils<br>
-            <a href="images/portfolio/3.jpg" title="1" data-gallery>View more</a></p>            
-        </figcaption>
-    </figure>
-     <figure class="effect-oscar  wowload fadeInUp">
-        <img src="images/portfolio/4.jpg" alt="img01"/>
-        <figcaption>
-            <h2>Fruits</h2>
-            <p>Lily likes to play with crayons and pencils<br>
-            <a href="images/portfolio/4.jpg" title="1" data-gallery>View more</a></p>            
-        </figcaption>
-    </figure>
-     
-     <figure class="effect-oscar  wowload fadeInUp">
-        <img src="images/portfolio/5.jpg" alt="img01"/>
-        <figcaption>
-            <h2>Breakfast</h2>
-            <p>Lily likes to play with crayons and pencils<br>
-            <a href="images/portfolio/5.jpg" title="1" data-gallery>View more</a></p>            
-        </figcaption>
-    </figure>
-    <figure class="effect-oscar  wowload fadeInUp">
-        <img src="images/portfolio/6.jpg" alt="img01"/>
-        <figcaption>
-            <h2>Kitchen</h2>
-            <p>Lily likes to play with crayons and pencils<br>
-            <a href="images/portfolio/6.jpg" title="1" data-gallery>View more</a></p>            
-        </figcaption>
-    </figure>
-     
-    
-    
-
      
 </div>
 <!-- works -->
