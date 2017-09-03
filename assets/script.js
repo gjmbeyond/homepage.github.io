@@ -116,3 +116,8 @@ function backward() {
 }
 
 //app 3
+var game;
+function app3(){
+    console.log("app3");
+    window.open("/minesweeper.html");
+}
