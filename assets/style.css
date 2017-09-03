@@ -117,4 +117,20 @@ p{font-size:1em;line-height: 1.7em; margin-bottom: 1.7em;}
 	.footer{padding-bottom: 2em;}
 }
 
-.simple-text { color: black; margin-left: 40%; }
+.simple-text { color: black; }
+.big-text {color: black; font-size: 60px;}
+
+.effect-hover-1 img:hover {
+	opacity: 1.0 !important;
+}
+
+.noselect {
+	-webkit-touch-callout: none; /* iOS Safari */
+	-webkit-user-select: none; /* Chrome/Safari/Opera */
+	-khtml-user-select: none; /* Konqueror */
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* Internet Explorer/Edge */
+	user-select: none; /* Non-prefixed version, currently
+	not supported by any browser */
+}
+
