@@ -1,0 +1,330 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 //EN">
+<html>
+    <head>
+        <title>2048 v1.0</title>
+        <meta name="keywords" content="games,free,javascript" />
+    </head>
+    <style>
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial;
+    font-size: 12px;
+    color: #FFFFFF;
+    background: #000000;
+}
+
+.div-game {
+    margin: 5% auto;
+    width: 480px;
+    height: 480px;
+}
+
+.div-board {
+    position: relative;
+    width: 480px;
+    height: 480px;
+    color: #000000;
+    background: #7F7F7F;
+    /* border-top: 1px solid #000000;
+    border-bottom: 1px solid #FFFFFF;
+    border-left: 1px solid #FFFFFF; */
+}
+
+.cell {
+    border: 0px;
+}
+    </style>
+    <body>
+        <div id="div-game" class="div-game">
+        <div id="div-board" class="div-board"></div>
+<script>
+var debug = true;
+
+/*
+Game
+*/
+function Game() {
+    this.board = new Board();
+    this.start = function() {
+        this.createBoard();
+    }
+
+    this.createBoard = function() {
+        if (debug)
+            console.log("game.createBoard");
+        this.board.create(4, 4);
+    }
+
+    this.up = function() {
+        this.board.up();
+    }
+
+    this.down = function() {
+        this.board.down();
+    }
+
+    this.left = function() {
+        this.board.left();
+    }
+
+    this.right = function() {
+        this.board.right();
+    }
+}
+
+/*
+Cell
+*/
+function Cell() {
+    this.value = 0;
+}
+
+/*
+Board
+*/
+function Board() {
+    this.div = document.getElementById("div-board");
+    this.cells = null;  
+    this.rows  = 0;
+    this.cols  = 0;
+
+    this.create = function(rows, cols) {
+        if (debug)
+            console.log("board.create");
+        this.cells = null;
+        this.rows  = rows;
+        this.cols  = cols;
+        this.createCells();
+        this.generateNumInBlank();
+        this.drawCells();
+    }
+    
+    this.createCells = function() {
+        if (debug)
+            console.log("board.createCells");
+        this.cells = new Array(this.rows);
+        for (var row = 0; row != this.rows; ++ row) {
+            this.cells[row] = new Array(this.cols);
+            for (var col = 0; col != this.cols; ++ col){
+                this.cells[row][col] = new Cell();
+            }
+        }
+    }
+
+    this.drawCells = function() {
+        if (debug)
+            console.log("board.drawCells");
+        for (var r = 0; r < this.rows; r++) {
+            for (var c = 0; c < this.cols; c++) {
+                this.drawCell(r, c);
+            }
+        }
+    }
+
+    this.drawCell = function(row, col) {
+        var img = document.createElement("img");
+        img.id = this.getImgId(row, col);
+        img.className = "cell";
+        img.src = "images/2048/"+String(this.cells[row][col].value)+".png";
+        this.div.appendChild(img);
+    }
+
+    this.generateNumInBlank = function() {
+        if (debug)
+            console.log("board.generateNumInBlank");
+        var r = rand(this.rows);
+        var c = rand(this.cols);
+        while (true) {
+            if (this.cells[r][c].value == 0) {
+                this.cells[r][c].value = 2;
+                break;
+            } else {
+                r = rand(this.rows);
+                c = rand(this.cols);
+                var fullFlag = true;
+                for (var row = 0; row < this.rows; row++){
+                    for (var col = 0; col < this.cols; col++) {
+                        if (this.cells[row][col].value == 0) {
+                            fullFlag = false;
+                            break;
+                        }
+                    }
+                }
+                if (fullFlag) {
+                    alert("Grids are full! Cannot move!");
+                    break;
+                }
+            }
+        }
+    }
+
+    this.getImgId = function(row, col) {
+        return ( String(row) + "-" + String(col) );
+    }
+
+    this.up = function() {
+        if (debug)
+            console.log("board.up");
+        for (var r = 0; r < this.rows-1; r++) {
+            for (var c = 0; c < this.cols; c++) {
+                if (this.cells[r+1][c].value == this.cells[r][c].value) {
+                    this.cells[r][c].value += this.cells[r+1][c].value;
+                    this.cells[r+1][c].value = 0;
+                }
+            }
+        }
+
+        var r_;
+        for (var c = 0; c < this.cols; c++){
+            for (var r = 1; r < this.rows; r++) {
+                r_ = r;
+                while ((r_ > 0) && (this.cells[r_-1][c].value == 0)) {
+                    this.cells[r_-1][c].value = this.cells[r_][c].value;
+                    this.cells[r_][c].value = 0;
+                    r_ -= 1;
+                }
+            }
+        }
+
+        this.generateNumInBlank();
+        this.destroyImgs();
+        this.drawCells();
+    }
+
+    this.down = function() {
+        if (debug)
+            console.log("board.down");
+        for (var r = this.rows-1; r > 0; r--) {
+            for (var c = 0; c < this.cols; c++) {
+                if (this.cells[r-1][c].value == this.cells[r][c].value) {
+                    this.cells[r][c].value += this.cells[r-1][c].value;
+                    this.cells[r-1][c].value = 0;
+                }
+            }
+        }
+
+        var r_;
+        for (var c = 0; c < this.cols; c++){
+            for (var r = this.rows-1; r > -1; r--) {
+                r_ = r;
+                while ((r_ < this.rows-1) && (this.cells[r_+1][c].value == 0)) {
+                    this.cells[r_+1][c].value = this.cells[r_][c].value;
+                    this.cells[r_][c].value = 0;
+                    r_ += 1;
+                }
+            }
+        }
+        
+        this.generateNumInBlank();
+        this.destroyImgs();
+        this.drawCells();
+    }
+
+    this.left = function() {
+        if (debug)
+            console.log("board.left");
+        for (var c = 0; r < this.cols-1; c++) {
+            for (var r = 0; r < this.rows; r++) {
+                if (this.cells[r][c+1].value == this.cells[r][c].value) {
+                    this.cells[r][c].value += this.cells[r][c+1].value;
+                    this.cells[r][c+1].value = 0;
+                }
+            }
+        }
+
+        var c_;
+        for (var r = 0; r < this.rows; r++){
+            for (var c = 1; c < this.cols; c++) {
+                c_ = c;
+                while ((c_ > 0) && (this.cells[r][c_-1].value == 0)) {
+                    this.cells[r][c_-1].value = this.cells[r][c_].value;
+                    this.cells[r][c_].value = 0;
+                    c_ -= 1;
+                }
+            }
+        }
+        
+        this.generateNumInBlank();
+        this.destroyImgs();
+        this.drawCells();
+    }
+
+    this.right = function() {
+        if (debug)
+            console.log("board.right");
+        for (var c = this.cols-1; c > 0; c--) {
+            for (var r = 0; r < this.rows; r++) {
+                if (this.cells[r][c-1].value == this.cells[r][c].value) {
+                    this.cells[r][c].value += this.cells[r][c-1].value;
+                    this.cells[r][c-1].value = 0;
+                }
+            }
+        }
+
+        var c_;
+        for (var r = 0; r < this.rows; r++){
+            for (var c = this.cols-1; c > -1; c--) {
+                c_ = c;
+                while ((c_ < this.cols-1) && (this.cells[r][c_+1].value == 0)) {
+                    this.cells[r][c_+1].value = this.cells[r][c_].value;
+                    this.cells[r][c_].value = 0;
+                    c_ += 1;
+                }
+            }
+        }
+        
+        this.generateNumInBlank();
+        this.destroyImgs();
+        this.drawCells();
+    }
+
+    this.destroyImgs = function() {
+        for (var r = 0; r < this.rows; r++) {
+            for (var c = 0; c < this.cols; c++) {
+                this.destroyImg(r, c);
+            }
+        }
+    }
+
+    this.destroyImg = function(row, col) {
+        this.div.removeChild( document.getElementById( this.getImgId(row, col) ) );
+    }
+}
+
+//
+// Utils
+//
+function rand(x) {
+  return( Math.floor( Math.random() * x ) );
+}
+
+//
+// Instance and start Game
+//
+var game = new Game();
+game.start();
+
+function keyDown(e) {
+    var keycode = e.which;
+    var realkey = String.fromCharCode(e.which);
+    if (debug)
+        console.log('按键码: ' + keycode + '字符: ' + realkey);
+    if (keycode == 38) {
+        game.up();
+    }
+    if (keycode == 40) {
+        game.down();
+    }
+    if (keycode == 37) {
+        game.left();
+    }
+    if (keycode == 39) {
+        game.right();
+    }
+}
+document.onkeydown = keyDown;
+
+</script>
+    </body>
+</html>
