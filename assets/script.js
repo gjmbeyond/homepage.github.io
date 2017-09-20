@@ -116,30 +116,35 @@ function backward() {
 }
 
 //app 3
-var game;
 function app3(){
     console.log("app3");
     window.open("/minesweeper.html");
 }
 
 //app 4
-function app4() {
+function app4(){
     console.log("app4");
-    var url = 'http://www.weather.com.cn/data/cityinfo/101280101.html';
-    $.ajax({
-        url: 'http://www.weather.com.cn/data/cityinfo/101280101.html',
-        type: 'get',
-        dataType: "jsonp",
-        // jsonpCallback:"jsonpCallback",//自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名
-        success: function(data) {
-            console.log(data);
-        }
-    });
-    // html = "<div id=\"head\">head</div><div id=\"content\"><p><ul><li>item1</li><li>item2</li></ul></div>";         
-    // //取出属性id=content的div下的所有li下的内容，返回结果将是["item1", "item2"]  
-    // ret = new html_extractor(html).tag("div").attr("id", "content").tag("li").match();
-    // console.log(ret);
+    window.open("/2048.html");
 }
+
+// //app 5
+// function app4() {
+//     console.log("app4");
+//     var url = 'http://www.weather.com.cn/data/cityinfo/101280101.html';
+//     $.ajax({
+//         url: 'http://www.weather.com.cn/data/cityinfo/101280101.html',
+//         type: 'get',
+//         dataType: "jsonp",
+//         // jsonpCallback:"jsonpCallback",//自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名
+//         success: function(data) {
+//             console.log(data);
+//         }
+//     });
+//     // html = "<div id=\"head\">head</div><div id=\"content\"><p><ul><li>item1</li><li>item2</li></ul></div>";         
+//     // //取出属性id=content的div下的所有li下的内容，返回结果将是["item1", "item2"]  
+//     // ret = new html_extractor(html).tag("div").attr("id", "content").tag("li").match();
+//     // console.log(ret);
+// }
 
 function jsonpCallback(data) {
     console.log('in jsonpCallback');

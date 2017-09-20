@@ -34,12 +34,34 @@ body {
 .cell {
     border: 0px;
 }
+
+.start-btn {
+    position: relative;
+    left: -30%;
+    top: -480px;
+    padding: 20px;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.choose-skin {
+    position: relative;
+    left: -64%;
+    top: -380px;
+}
     </style>
-    <body>
+    <body ondragstart="return false;">
         <div id="div-game" class="div-game">
         <div id="div-board" class="div-board"></div>
+        <button id="start" class="start-btn" onclick="restart();">Start</button>
+        <span class="choose-skin">Choose skin</span>
+        <select id="skin-config" class="choose-skin" onchange="changeSkin();">
+            <option value="0">Default</option>
+            <option value="1">Colorful</option>
+        </select>
 <script>
 var debug = true;
+var allowInput = true;
 
 /*
 Game
@@ -48,6 +70,7 @@ function Game() {
     this.board = new Board();
     this.start = function() {
         this.createBoard();
+        allowInput = true;
     }
 
     this.createBoard = function() {
@@ -71,6 +94,18 @@ function Game() {
     this.right = function() {
         this.board.right();
     }
+
+    this.detectWinCondition = function() {
+        if (this.board.isWin()) {
+            alert("You have reached 2048, you win!");
+            allowInput = false;
+        }
+    }
+
+    this.changeSkin = function() {
+        var skinNo = document.getElementById("skin-config").value;
+        this.board.setSkinNo(skinNo);
+    }
 }
 
 /*
@@ -88,10 +123,18 @@ function Board() {
     this.cells = null;  
     this.rows  = 0;
     this.cols  = 0;
+    this.skinNo = 0;
+
+    this.setSkinNo = function(skinNo) {
+        this.skinNo = skinNo;
+        this.destroyImgs();
+        this.drawCells();
+    }
 
     this.create = function(rows, cols) {
         if (debug)
             console.log("board.create");
+        this.destroyImgs();
         this.cells = null;
         this.rows  = rows;
         this.cols  = cols;
@@ -126,7 +169,8 @@ function Board() {
         var img = document.createElement("img");
         img.id = this.getImgId(row, col);
         img.className = "cell";
-        img.src = "images/2048/"+String(this.cells[row][col].value)+".png";
+        img.src = "images/2048/"+String(this.skinNo)+"/"+String(this.cells[row][col].value)+".png";
+        // img.draggable="false";
         this.div.appendChild(img);
     }
 
@@ -137,7 +181,14 @@ function Board() {
         var c = rand(this.cols);
         while (true) {
             if (this.cells[r][c].value == 0) {
-                this.cells[r][c].value = 2;
+                var random = rand(10);
+                if (random < 5) {
+                    this.cells[r][c].value = 2;
+                } else if (random < 8) {
+                    this.cells[r][c].value = 4;
+                } else {
+                    this.cells[r][c].value = 8;
+                }
                 break;
             } else {
                 r = rand(this.rows);
@@ -163,6 +214,17 @@ function Board() {
         return ( String(row) + "-" + String(col) );
     }
 
+    this.isWin = function() {
+        for (var r = 0; r < this.rows; r++) {
+            for (var c = 0; c < this.cols; c++) {
+                if (this.cells[r][c].value == 2048) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     this.up = function() {
         if (debug)
             console.log("board.up");
@@ -183,6 +245,15 @@ function Board() {
                     this.cells[r_-1][c].value = this.cells[r_][c].value;
                     this.cells[r_][c].value = 0;
                     r_ -= 1;
+                }
+            }
+        }
+
+        for (var r = 0; r < this.rows-1; r++) {
+            for (var c = 0; c < this.cols; c++) {
+                if (this.cells[r+1][c].value == this.cells[r][c].value) {
+                    this.cells[r][c].value += this.cells[r+1][c].value;
+                    this.cells[r+1][c].value = 0;
                 }
             }
         }
@@ -216,6 +287,15 @@ function Board() {
             }
         }
         
+        for (var r = this.rows-1; r > 0; r--) {
+            for (var c = 0; c < this.cols; c++) {
+                if (this.cells[r-1][c].value == this.cells[r][c].value) {
+                    this.cells[r][c].value += this.cells[r-1][c].value;
+                    this.cells[r-1][c].value = 0;
+                }
+            }
+        }
+
         this.generateNumInBlank();
         this.destroyImgs();
         this.drawCells();
@@ -245,6 +325,15 @@ function Board() {
             }
         }
         
+        for (var c = 0; r < this.cols-1; c++) {
+            for (var r = 0; r < this.rows; r++) {
+                if (this.cells[r][c+1].value == this.cells[r][c].value) {
+                    this.cells[r][c].value += this.cells[r][c+1].value;
+                    this.cells[r][c+1].value = 0;
+                }
+            }
+        }
+
         this.generateNumInBlank();
         this.destroyImgs();
         this.drawCells();
@@ -274,6 +363,15 @@ function Board() {
             }
         }
         
+        for (var c = this.cols-1; c > 0; c--) {
+            for (var r = 0; r < this.rows; r++) {
+                if (this.cells[r][c-1].value == this.cells[r][c].value) {
+                    this.cells[r][c].value += this.cells[r][c-1].value;
+                    this.cells[r][c-1].value = 0;
+                }
+            }
+        }
+
         this.generateNumInBlank();
         this.destroyImgs();
         this.drawCells();
@@ -288,7 +386,9 @@ function Board() {
     }
 
     this.destroyImg = function(row, col) {
-        this.div.removeChild( document.getElementById( this.getImgId(row, col) ) );
+        if (document.getElementById( this.getImgId(row, col) ) != null){
+            this.div.removeChild( document.getElementById( this.getImgId(row, col) ) );
+        }
     }
 }
 
@@ -305,26 +405,73 @@ function rand(x) {
 var game = new Game();
 game.start();
 
-function keyDown(e) {
+function restart() {
+    game.start();
+}
+
+function changeSkin() {
+    game.changeSkin();
+    document.getElementById("skin-config").blur();
+}
+
+document.onkeydown = function(e){
     var keycode = e.which;
     var realkey = String.fromCharCode(e.which);
     if (debug)
         console.log('按键码: ' + keycode + '字符: ' + realkey);
-    if (keycode == 38) {
-        game.up();
-    }
-    if (keycode == 40) {
-        game.down();
-    }
-    if (keycode == 37) {
-        game.left();
-    }
-    if (keycode == 39) {
-        game.right();
+    if (allowInput) {
+        if (keycode == 38) {
+            game.up();
+        }
+        if (keycode == 40) {
+            game.down();
+        }
+        if (keycode == 37) {
+            game.left();
+        }
+        if (keycode == 39) {
+            game.right();
+        }
+        game.detectWinCondition();
     }
 }
-document.onkeydown = keyDown;
 
+var startX = 0;
+var startY = 0;
+document.onmousedown = function(e) {
+    startX = e.clientX;
+    startY = e.clientY;
+}
+
+document.onmouseup = function(e) {
+    var xOffset = e.clientX - startX;
+    var yOffset = e.clientY - startY;
+    if (allowInput && 
+        (Math.abs(xOffset) > 20 || Math.abs(yOffset) > 20)) {
+        if (xOffset > 0) { //move right
+            if (xOffset >= Math.abs(yOffset)) {
+                game.right();
+            } else {
+                if (yOffset <= 0) {
+                    game.up();
+                } else {
+                    game.down();
+                }
+            }
+        } else {
+            if (Math.abs(xOffset) >= Math.abs(yOffset)) {
+                game.left();
+            } else {
+                if (yOffset <= 0) {
+                    game.up();
+                } else {
+                    game.down();
+                }
+            }
+        }
+        game.detectWinCondition();
+    }
+}
 </script>
     </body>
 </html>
