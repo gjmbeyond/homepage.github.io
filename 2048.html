@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 //EN">
 <html>
     <head>
-        <title>2048 v1.0</title>
+        <title>2048 v1.1</title>
         <meta name="keywords" content="games,free,javascript" />
     </head>
     <style>
@@ -181,10 +181,10 @@ function Board() {
         var c = rand(this.cols);
         while (true) {
             if (this.cells[r][c].value == 0) {
-                var random = rand(10);
-                if (random < 5) {
+                var random = rand(100);
+                if (random < 60) {
                     this.cells[r][c].value = 2;
-                } else if (random < 8) {
+                } else if (random < 95) {
                     this.cells[r][c].value = 4;
                 } else {
                     this.cells[r][c].value = 8;
@@ -228,11 +228,13 @@ function Board() {
     this.up = function() {
         if (debug)
             console.log("board.up");
+        var moved = false;
         for (var r = 0; r < this.rows-1; r++) {
             for (var c = 0; c < this.cols; c++) {
                 if (this.cells[r+1][c].value == this.cells[r][c].value) {
                     this.cells[r][c].value += this.cells[r+1][c].value;
                     this.cells[r+1][c].value = 0;
+                    moved = true;
                 }
             }
         }
@@ -245,6 +247,7 @@ function Board() {
                     this.cells[r_-1][c].value = this.cells[r_][c].value;
                     this.cells[r_][c].value = 0;
                     r_ -= 1;
+                    moved = true;
                 }
             }
         }
@@ -254,23 +257,29 @@ function Board() {
                 if (this.cells[r+1][c].value == this.cells[r][c].value) {
                     this.cells[r][c].value += this.cells[r+1][c].value;
                     this.cells[r+1][c].value = 0;
+                    moved = true;
                 }
             }
         }
 
-        this.generateNumInBlank();
-        this.destroyImgs();
-        this.drawCells();
+        if (moved) {
+            this.generateNumInBlank();
+            this.destroyImgs();
+            this.drawCells();
+        }
+
     }
 
     this.down = function() {
         if (debug)
             console.log("board.down");
+        var moved = false;
         for (var r = this.rows-1; r > 0; r--) {
             for (var c = 0; c < this.cols; c++) {
                 if (this.cells[r-1][c].value == this.cells[r][c].value) {
                     this.cells[r][c].value += this.cells[r-1][c].value;
                     this.cells[r-1][c].value = 0;
+                    moved = true;
                 }
             }
         }
@@ -283,6 +292,7 @@ function Board() {
                     this.cells[r_+1][c].value = this.cells[r_][c].value;
                     this.cells[r_][c].value = 0;
                     r_ += 1;
+                    moved = true;
                 }
             }
         }
@@ -292,23 +302,29 @@ function Board() {
                 if (this.cells[r-1][c].value == this.cells[r][c].value) {
                     this.cells[r][c].value += this.cells[r-1][c].value;
                     this.cells[r-1][c].value = 0;
+                    moved = true;
                 }
             }
         }
 
-        this.generateNumInBlank();
-        this.destroyImgs();
-        this.drawCells();
+        if (moved) {
+            this.generateNumInBlank();
+            this.destroyImgs();
+            this.drawCells();
+        }
+
     }
 
     this.left = function() {
         if (debug)
             console.log("board.left");
+        var moved = false;
         for (var c = 0; r < this.cols-1; c++) {
             for (var r = 0; r < this.rows; r++) {
                 if (this.cells[r][c+1].value == this.cells[r][c].value) {
                     this.cells[r][c].value += this.cells[r][c+1].value;
                     this.cells[r][c+1].value = 0;
+                    moved = true;
                 }
             }
         }
@@ -321,6 +337,7 @@ function Board() {
                     this.cells[r][c_-1].value = this.cells[r][c_].value;
                     this.cells[r][c_].value = 0;
                     c_ -= 1;
+                    moved = true;
                 }
             }
         }
@@ -330,23 +347,29 @@ function Board() {
                 if (this.cells[r][c+1].value == this.cells[r][c].value) {
                     this.cells[r][c].value += this.cells[r][c+1].value;
                     this.cells[r][c+1].value = 0;
+                    moved = true;
                 }
             }
         }
 
-        this.generateNumInBlank();
-        this.destroyImgs();
-        this.drawCells();
+        if (moved) {
+            this.generateNumInBlank();
+            this.destroyImgs();
+            this.drawCells();
+        }
+
     }
 
     this.right = function() {
         if (debug)
             console.log("board.right");
+        var moved = false;
         for (var c = this.cols-1; c > 0; c--) {
             for (var r = 0; r < this.rows; r++) {
                 if (this.cells[r][c-1].value == this.cells[r][c].value) {
                     this.cells[r][c].value += this.cells[r][c-1].value;
                     this.cells[r][c-1].value = 0;
+                    moved = true;
                 }
             }
         }
@@ -359,6 +382,7 @@ function Board() {
                     this.cells[r][c_+1].value = this.cells[r][c_].value;
                     this.cells[r][c_].value = 0;
                     c_ += 1;
+                    moved = true;
                 }
             }
         }
@@ -368,13 +392,17 @@ function Board() {
                 if (this.cells[r][c-1].value == this.cells[r][c].value) {
                     this.cells[r][c].value += this.cells[r][c-1].value;
                     this.cells[r][c-1].value = 0;
+                    moved = true;
                 }
             }
         }
 
-        this.generateNumInBlank();
-        this.destroyImgs();
-        this.drawCells();
+        if (moved) {
+            this.generateNumInBlank();
+            this.destroyImgs();
+            this.drawCells();
+        }
+
     }
 
     this.destroyImgs = function() {
@@ -439,15 +467,21 @@ document.onkeydown = function(e){
 var startX = 0;
 var startY = 0;
 document.onmousedown = function(e) {
+    // console.log(e);
     startX = e.clientX;
     startY = e.clientY;
 }
 
 document.onmouseup = function(e) {
+    if (e.clientX == 0 && e.clientY == 0) {
+        return;
+    }
+    // console.log(e);
     var xOffset = e.clientX - startX;
     var yOffset = e.clientY - startY;
+    var MIN_SWIPE = 100;
     if (allowInput && 
-        (Math.abs(xOffset) > 20 || Math.abs(yOffset) > 20)) {
+        (Math.abs(xOffset) > MIN_SWIPE || Math.abs(yOffset) > MIN_SWIPE)) {
         if (xOffset > 0) { //move right
             if (xOffset >= Math.abs(yOffset)) {
                 game.right();
